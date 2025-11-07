@@ -31,7 +31,10 @@ def cadastro():
         # Validação dos dados recebidos
         try:
             if not isinstance(json_data, dict):
-                return jsonify({"message": "Dados inválidos! Esperado um objeto JSON."}), 400
+                return (
+                    jsonify({"message": "Dados inválidos! Esperado um objeto JSON."}),
+                    400,
+                )
             schema_data = usuario_schema.load(json_data)
             dados: Dict[str, Any] = dict(schema_data) if schema_data else {}
         except ValidationError as err:
@@ -76,7 +79,10 @@ def login():
         # Validação dos dados recebidos
         try:
             if not isinstance(json_data, dict):
-                return jsonify({"message": "Dados inválidos! Esperado um objeto JSON."}), 400
+                return (
+                    jsonify({"message": "Dados inválidos! Esperado um objeto JSON."}),
+                    400,
+                )
             schema_data = login_schema.load(json_data)
             dados: Dict[str, Any] = dict(schema_data) if schema_data else {}
         # trunk-ignore(ruff/E722)
@@ -163,11 +169,14 @@ def atualizar(id):
         if usuario.id != current_user.id:
             return jsonify({"message": "Não autorizado!"}), 403
 
-        # Validação dos dados recebidos
+        # Validação dos dados recebidos (partial=True permite updates parciais)
         try:
             if not isinstance(json_data, dict):
-                return jsonify({"message": "Dados inválidos! Esperado um objeto JSON."}), 400
-            schema_data = login_schema.load(json_data)
+                return (
+                    jsonify({"message": "Dados inválidos! Esperado um objeto JSON."}),
+                    400,
+                )
+            schema_data = usuario_schema.load(json_data, partial=True)
             dados: Dict[str, Any] = dict(schema_data) if schema_data else {}
         except ValidationError as err:
             return jsonify({"message": "Dados inválidos!", "errors": err.messages}), 400
@@ -196,10 +205,6 @@ def deletar(id):
     try:
         # Verifica se o usuário existe
         usuario = UsuarioModel.query.get_or_404(id)
-
-        # Apenas o próprio usuário pode se deletar
-        if usuario.id != current_user.id:
-            return jsonify({"message": "Não autorizado!"}), 403
 
         # Deleta o usuário
         return excluir_usuario(usuario)

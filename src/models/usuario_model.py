@@ -10,7 +10,9 @@ class UsuarioModel(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     nome = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(50), unique=True, nullable=False)
-    senha = db.Column(db.String(50), nullable=False)
+    # Password hashes produced by Werkzeug are longer than 50 chars.
+    # Use a larger column to avoid truncation which makes verification fail.
+    senha = db.Column(db.String(255), nullable=False)
 
     # Gera o hash da senha e armazena no campo 'senha'
     def gen_senha(self, senha):

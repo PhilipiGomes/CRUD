@@ -4,6 +4,7 @@ from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 import os
+from connection import SQLALCHEMY_DATABASE_URI
 
 # Carregar variáveis de ambiente
 load_dotenv()
@@ -19,7 +20,7 @@ def create_app():
     # Configura o app com as variáveis de ambiente
     app.config.from_mapping(
         SECRET_KEY=os.getenv("SECRET_KEY"),  # Definindo a chave secreta
-        SQLALCHEMY_DATABASE_URI=os.getenv("SQLALCHEMY_DATABASE_URI"),  # Usando a URI configurada na .env
+        SQLALCHEMY_DATABASE_URI=SQLALCHEMY_DATABASE_URI, # Usando a URI configurada na .env
         SQLALCHEMY_TRACK_MODIFICATIONS=False,  # Desativando modificações de rastreamento
     )
 

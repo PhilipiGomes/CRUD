@@ -23,7 +23,8 @@ def editar_usuario(usuario, nome=None, email=None, senha=None):
         if email:
             usuario.email = email
         if senha:
-            usuario.senha = usuario.gen_senha(senha)
+            # gen_senha already sets usuario.senha; do not overwrite with its return value
+            usuario.gen_senha(senha)
 
         db.session.commit()
 
