@@ -53,8 +53,8 @@ def create_app():
 
         return UsuarioModel.query.get(int(user_id))
 
-    # Registra os blueprints
-    from src.view.usuario_view import bp_usuarios
+    # Registra os blueprints (moved to top-level routes.py)
+    from src.routes import bp_usuarios
 
     app.register_blueprint(bp_usuarios)
 

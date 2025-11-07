@@ -17,7 +17,6 @@ usuario_schema = UsuarioSchema()
 login_schema = LoginSchema()
 
 
-# --- Simple HTML pages (optional) -----------------------------------------
 @bp_usuarios.get("/")
 def index():
     if current_user.is_authenticated:
