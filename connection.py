@@ -12,7 +12,7 @@ PASSWORD = os.getenv("PASSWORD")
 HOST = os.getenv("HOST")
 USER = os.getenv("USER")
 SQLALCHEMY_DATABASE_URI = (
-    f"mysql+pymysql://'{USER}':{PASSWORD}@{HOST}:{PORT}/{DATABASE}"
+    f"mysql://'{USER}':{PASSWORD}@{HOST}:{PORT}/{DATABASE}"
 )
 SQLALCHEMY_TRACK_MODIFICATIONS = True
 
