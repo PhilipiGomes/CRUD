@@ -10,14 +10,14 @@ class UsuarioSchema(Schema):
     senha = fields.Str(required=True, load_only=True)
 
     @validates("nome")
-    def validate_nome(self, value):
+    def validate_nome(self, value, **kwargs):
         if len(value) < 3:
             raise ValidationError("O nome deve ter pelo menos 3 caracteres")
         if len(value) > 50:
             raise ValidationError("O nome deve ter no máximo 50 caracteres")
 
     @validates("senha")
-    def validate_senha(self, value):
+    def validate_senha(self, value, **kwargs):
         if len(value) < 6:
             raise ValidationError("A senha deve ter pelo menos 6 caracteres")
         if len(value) > 50:
