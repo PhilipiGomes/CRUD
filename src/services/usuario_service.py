@@ -5,7 +5,7 @@ from src import db
 from src.models.usuario_model import UsuarioModel
 
 
-def cadastrar_usuario(nome, email, senha):
+def cadastrar_usuario(nome, email, senha) -> UsuarioModel:
     usuario_db = UsuarioModel()
     usuario_db.nome = nome
     usuario_db.email = email
