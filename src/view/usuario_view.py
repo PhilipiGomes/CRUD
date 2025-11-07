@@ -1,6 +1,6 @@
 from typing import Any, Dict
 
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, redirect, render_template, request, url_for
 from flask_login import current_user, login_required, login_user, logout_user
 from marshmallow import ValidationError
 
@@ -15,6 +15,31 @@ from src.services.usuario_service import (
 bp_usuarios = Blueprint("usuarios", __name__)
 usuario_schema = UsuarioSchema()
 login_schema = LoginSchema()
+
+
+# --- Simple HTML pages (optional) -----------------------------------------
+@bp_usuarios.get("/")
+def index():
+    if current_user.is_authenticated:
+        return redirect(url_for("usuarios.listar"))
+    return redirect(url_for("usuarios.login_page"))
+
+
+@bp_usuarios.get("/login")
+def login_page():
+    return render_template("login.html")
+
+
+@bp_usuarios.get("/cadastro")
+def cadastro_page():
+    return render_template("cadastro.html")
+
+
+@bp_usuarios.get("/usuarios/list")
+@login_required
+def usuarios_page():
+    usuarios = UsuarioModel.query.all()
+    return render_template("usuarios.html", usuarios=usuarios)
 
 
 @bp_usuarios.post("/cadastro")
