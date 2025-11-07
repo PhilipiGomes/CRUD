@@ -20,7 +20,8 @@ login_schema = LoginSchema()
 @bp_usuarios.get("/")
 def index():
     if current_user.is_authenticated:
-        return redirect(url_for("usuarios.listar"))
+        # Redirect authenticated users to the HTML users page (not the JSON API)
+        return redirect(url_for("usuarios.usuarios_page"))
     return redirect(url_for("usuarios.login_page"))
 
 
