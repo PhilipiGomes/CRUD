@@ -19,12 +19,20 @@ def create_app():
     app = Flask(__name__)
 
     # Configura o app com as variáveis de ambiente
+    # Prefer explicit SQLALCHEMY_DATABASE_URI from env; fallback to connection.py
+    db_uri = os.getenv("SQLALCHEMY_DATABASE_URI")
+    if not db_uri:
+        try:
+            from connection import SQLALCHEMY_DATABASE_URI as CONN_URI
+
+            db_uri = CONN_URI
+        except Exception:
+            db_uri = None
+
     app.config.from_mapping(
         SECRET_KEY=os.getenv("SECRET_KEY"),  # Definindo a chave secreta
-        SQLALCHEMY_DATABASE_URI=os.getenv(
-            "SQLALCHEMY_DATABASE_URI"
-        ),  # Usando a URI configurada na .env
-        SQLALCHEMY_TRACK_MODIFICATIONS=False,  # Desativando modificações de rastreamento
+        SQLALCHEMY_DATABASE_URI=db_uri,
+        SQLALCHEMY_TRACK_MODIFICATIONS=False,
     )
 
     # Inicializa as extensões com o app
@@ -59,6 +67,12 @@ def create_app():
     if skip_db_create != "1":
         with app.app_context():
             db.create_all()
+
+    # If no DB URI was found, raise a clear error now (so it's obvious in logs)
+    if not app.config.get("SQLALCHEMY_DATABASE_URI"):
+        raise RuntimeError(
+            "SQLALCHEMY_DATABASE_URI is not set. Set the env var or define it in connection.py."
+        )
 
     return app
 
